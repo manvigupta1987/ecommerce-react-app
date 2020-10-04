@@ -6,3 +6,8 @@
     text-decoration: none;
     color: black;
   }
+
+  /* this is to avoid the padding around the form inputs fields */
+  * {
+    box-sizing: border-box; 
+  }
