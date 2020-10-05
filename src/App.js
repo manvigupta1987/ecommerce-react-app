@@ -17,6 +17,7 @@ class App extends Component {
   unsubscribeFromAuth = null;
   
   componentDidMount() {
+    
     // Auth is an open subscription. So, we also need to close this subscription when application is unmounted. 
     // To achieve this, onAuthStateChanged gives us a function which if we call unsubscribe the subscription. 
     this.unsubscribeFromAuth =  auth.onAuthStateChanged(async userAuth => {
@@ -24,7 +25,7 @@ class App extends Component {
 
         //check if there is document present with the user's details. if not, it creates the entry in the firebase database and returns userRef.
         // if the document is present, it returns the referenece of existing document. 
-        const userRef  = createUserProfileDocument(userAuth);
+        const userRef  = await createUserProfileDocument(userAuth);
         // You can listen to a document with the onSnapshot() method. An initial call using the callback you provide creates 
         // a document snapshot immediately with the current contents of the single document. Then, each time the contents change, 
         // another call updates the document snapshot.
@@ -35,10 +36,12 @@ class App extends Component {
               // .data() method on the snapshot gives the actual properties. 
               ...snapShot.data()
             }
-          })
+          });
+          console.log(this.state.currentUser);
         })
-      } 
-      this.setState({currentUser: userAuth})
+      } else { 
+        this.setState({currentUser: userAuth})
+      }
    })
   }
 
