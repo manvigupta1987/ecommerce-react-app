@@ -5,7 +5,7 @@ import {Route, Switch} from 'react-router-dom'
 import Shop from './pages/shop/shop.component'
 import Header from './components/header/header.components';
 import SignInAndSignUpPage from './pages/sign-in-and-sign-up-page/sign-in-and-sign-up.component'
-import {auth} from './firebase/firebase.utils';
+import {auth, createUserProfileDocument} from './firebase/firebase.utils';
 
 class App extends Component {
   constructor() {
@@ -19,8 +19,26 @@ class App extends Component {
   componentDidMount() {
     // Auth is an open subscription. So, we also need to close this subscription when application is unmounted. 
     // To achieve this, onAuthStateChanged gives us a function which if we call unsubscribe the subscription. 
-    this.unsubscribeFromAuth =  auth.onAuthStateChanged((user) => {this.setState({currentUser: user})
-    console.log(user)
+    this.unsubscribeFromAuth =  auth.onAuthStateChanged(async userAuth => {
+      if(userAuth) {
+
+        //check if there is document present with the user's details. if not, it creates the entry in the firebase database and returns userRef.
+        // if the document is present, it returns the referenece of existing document. 
+        const userRef  = createUserProfileDocument(userAuth);
+        // You can listen to a document with the onSnapshot() method. An initial call using the callback you provide creates 
+        // a document snapshot immediately with the current contents of the single document. Then, each time the contents change, 
+        // another call updates the document snapshot.
+        userRef.onSnapshot(snapShot => {
+          this.setState({
+            currentUser: {
+              id: snapShot.id,
+              // .data() method on the snapshot gives the actual properties. 
+              ...snapShot.data()
+            }
+          })
+        })
+      } 
+      this.setState({currentUser: userAuth})
    })
   }
 
