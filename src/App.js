@@ -1,23 +1,20 @@
 import React, { Component } from 'react';
 import './App.css';
 import HomePage from './pages/homepage/homepage.component.jsx';
-import {Route, Switch} from 'react-router-dom'
+import {Route, Switch, Redirect} from 'react-router-dom'
 import Shop from './pages/shop/shop.component'
 import Header from './components/header/header.components';
 import SignInAndSignUpPage from './pages/sign-in-and-sign-up-page/sign-in-and-sign-up.component'
 import {auth, createUserProfileDocument} from './firebase/firebase.utils';
+import {connect} from 'react-redux';
+import {setCurrentUser} from './redux/user/user.action';
+
 
 class App extends Component {
-  constructor() {
-    super()
-    this.state = {
-      currentUser: null
-    }
-  }
   unsubscribeFromAuth = null;
   
   componentDidMount() {
-    
+    const {setCurrentUser} = this.props;
     // Auth is an open subscription. So, we also need to close this subscription when application is unmounted. 
     // To achieve this, onAuthStateChanged gives us a function which if we call unsubscribe the subscription. 
     this.unsubscribeFromAuth =  auth.onAuthStateChanged(async userAuth => {
@@ -30,16 +27,14 @@ class App extends Component {
         // a document snapshot immediately with the current contents of the single document. Then, each time the contents change, 
         // another call updates the document snapshot.
         userRef.onSnapshot(snapShot => {
-          this.setState({
-            currentUser: {
+          setCurrentUser({
               id: snapShot.id,
               // .data() method on the snapshot gives the actual properties. 
               ...snapShot.data()
-            }
-          });
+            });
         })
       } else { 
-        this.setState({currentUser: userAuth})
+        setCurrentUser(userAuth)
       }
    })
   }
@@ -51,17 +46,30 @@ class App extends Component {
   render() {
     return( 
       <div className='App'>
-        <Header currentUser={this.state.currentUser}/>
+        <Header/>
         <Switch>
           <Route exact path='/' component ={HomePage}/>
           <Route exact path='/shop' component={Shop}/>
-          <Route exact path='/signin' component={SignInAndSignUpPage}/>
+          <Route exact path='/signin' render={()=> 
+                                      this.props.currentUser ? 
+                                        (<Redirect to='/' />) : 
+                                        (<SignInAndSignUpPage/>)}/>
         </Switch>
       </div>
     );
   }
 }
 
-export default App;
+//Used to get the data from the reducer.
+const mapStateToProps = (state) => ({
+  currentUser: state.user.currentUser
+})
+
+// used to dispatch an action to the reducer.
+const mapDispatchToProps = dispatch => ({
+  setCurrentUser: user => dispatch(setCurrentUser(user))
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);
 
 

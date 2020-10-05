@@ -3,6 +3,8 @@ import './header.styles.scss'
 import {Link} from 'react-router-dom'
 import {ReactComponent as Logo} from '../../assets/logo.svg'
 import {auth} from '../../firebase/firebase.utils';
+//Connect is a HOC 
+import {connect} from 'react-redux';
 
 const Header = ({currentUser}) => {
   return(
@@ -23,4 +25,12 @@ const Header = ({currentUser}) => {
     </div>
   );
 }
-export default Header;
+// name of this function can be anything but mapStateToProps is standard with redux codebases. 
+// the value that is recived in this is the state object which is root reducer. 
+// this function will be used anywhere we need property from the reducer. 
+const mapStateToProps = (state) => ({
+  currentUser: state.user.currentUser
+})
+
+//connect is the high order component that takes a component as an argument and returns a component. 
+export default connect(mapStateToProps)(Header);
