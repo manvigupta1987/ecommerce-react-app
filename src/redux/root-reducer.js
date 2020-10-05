@@ -5,10 +5,12 @@
 
 import { combineReducers } from  'redux';
 import userReducer from './user/user.reducer';
+import cartReducer from './cart/cart.reducer';
 
 // it returns the one big json state object where key is the value of the reducer. 
 export default combineReducers ({
-  user: userReducer
+  user: userReducer,
+  cart: cartReducer
 })
 
 
