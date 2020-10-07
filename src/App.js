@@ -8,6 +8,8 @@ import SignInAndSignUpPage from './pages/sign-in-and-sign-up-page/sign-in-and-si
 import {auth, createUserProfileDocument} from './firebase/firebase.utils';
 import {connect} from 'react-redux';
 import {setCurrentUser} from './redux/user/user.action';
+import {selectCurrentUser} from './redux/user/user.selector';
+import {createStructuredSelector} from 'reselect'
 
 
 class App extends Component {
@@ -61,8 +63,8 @@ class App extends Component {
 }
 
 //Used to get the data from the reducer.
-const mapStateToProps = (state) => ({
-  currentUser: state.user.currentUser
+const mapStateToProps = createStructuredSelector({
+  currentUser: selectCurrentUser
 })
 
 // used to dispatch an action to the reducer.
