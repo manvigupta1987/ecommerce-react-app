@@ -4,7 +4,7 @@ import HomePage from './pages/homepage/homepage.component.jsx';
 import Shop from './pages/shop/shop.component'
 import Header from './components/header/header.components';
 import SignInAndSignUpPage from './pages/sign-in-and-sign-up-page/sign-in-and-sign-up.component'
-import {Checkout} from './pages/checkout/checkout.component';
+import Checkout from './pages/checkout/checkout.component';
 import {auth, createUserProfileDocument} from './firebase/firebase.utils';
 import {Route, Switch, Redirect} from 'react-router-dom'
 import {connect} from 'react-redux';
