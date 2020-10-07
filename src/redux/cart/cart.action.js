@@ -9,4 +9,7 @@ export const addItems = (item) => ({
   payload: item
 })
 
-// export default { toggleCartHidden, addItems };
+export const removeItems = (item) => ({
+  type: CartActionType.REMOVE_ITEM,
+  payload: item
+})

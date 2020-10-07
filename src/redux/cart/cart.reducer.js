@@ -3,7 +3,7 @@
 // action is not related to that reducer. 
 
 import CartActionType from './cart.types'
-import {addItemsToCart} from './cart.utils'
+import {addItemsToCart, removeItemsFromCart} from './cart.utils'
 const INTIAL_STATE = {
   hidden: true,
   cartItems : []
@@ -19,6 +19,11 @@ const cartReducer = (state=INTIAL_STATE, action) => {
       return {
         ...state,
         cartItems: addItemsToCart(state.cartItems, action.payload)
+      }
+    case CartActionType.REMOVE_ITEM:
+      return {
+        ...state,
+        cartItems: removeItemsFromCart(state.cartItems, action.payload)
       }
     default:
       return state;
