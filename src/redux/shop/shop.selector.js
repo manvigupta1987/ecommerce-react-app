@@ -1,14 +1,6 @@
 import {createSelector} from 'reselect';
 import memoize from 'lodash.memoize';
 
-const COLLECTION_ID_MAP = {
-  hats: 1,
-  sneakers: 2, 
-  jackets: 3,
-  womens: 4,
-  mens: 5
-}
-
 //input selector --> takes complete state and returns piece of the state. 
 const selectShop = state => state.shop;
 
@@ -20,6 +12,11 @@ export const selectShopCollections = createSelector(
   shop => shop.collections
 )
 
+export const selectCollectionsForPreview = createSelector(
+  [selectShopCollections],
+  collections => Object.values(collections)
+)
+
 // This function is not memoized due to collectionUrlParam being passed as mapStateToProps running whenever state changes and calling a new
 // instance of selectCollection. Since collectionUrlParam is teh dynamic param, so to to memoize selectCollection we actually have to memoize the whole function using a memoize helper function
 
@@ -29,5 +26,5 @@ export const selectShopCollections = createSelector(
 export const selectCollection = memoize((collectionUrlParam) => 
 createSelector(
   [selectShopCollections],
-  collections => collections.find(collection => collection.id === COLLECTION_ID_MAP[collectionUrlParam])
+  collections => collections[collectionUrlParam]
 ));
