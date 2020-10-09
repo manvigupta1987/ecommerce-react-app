@@ -7,13 +7,13 @@ const StripeButton = ({price}) => {
 
   const onToken = (token) => {
     console.log(token)
-    alert(token)
+    alert('Payment Successful!')
   }
 
   return (
     <StripeCheckout
       label='Pay now'
-      name = 'Ecommerce Site'
+      name = 'Queen Live'
       billingAddress
       shippingAddress
       image='https://sendeyo.com/up/d/f3eb2117da'
