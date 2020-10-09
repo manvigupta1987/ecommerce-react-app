@@ -13,7 +13,7 @@ const StripeButton = ({price}) => {
   return (
     <StripeCheckout
       label='Pay now'
-      name = 'Queen Live'
+      name = 'Queen Clothing'
       billingAddress
       shippingAddress
       image='https://sendeyo.com/up/d/f3eb2117da'

@@ -7,7 +7,11 @@ import rootReducer from './root-reducer';
 //redux-persist is the library used for including local storage or session storage in the application.
 import {persistStore} from 'redux-persist';
 
-const middlewares = [logger];
+const middlewares = [];
+
+if(process.env.NODE_ENV === 'development') {
+  middlewares.push(logger)
+}
 export const store = createStore(rootReducer, applyMiddleware(...middlewares));
 
 
