@@ -7,7 +7,6 @@ import {selectCartItemsCount} from '../../redux/cart/cart.selector'
 import {createStructuredSelector} from 'reselect'
 
 const CartIcon = ({toggleCartHidden, itemCount}) => {
-  console.log("re-rendering cart icons")
   return (
     <div className='cart-icon' onClick={toggleCartHidden}>
       <ShoppingIcon className='shopping-icon'/>

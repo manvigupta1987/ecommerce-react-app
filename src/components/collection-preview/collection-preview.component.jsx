@@ -5,7 +5,6 @@ import {CollectionPreviewContainer, TitleContainer, PreviewContainer} from './co
 import { withRouter } from 'react-router-dom';
 
 const CollectionPreview = (props) => {
-  console.log("props are", props);
   const {title, items, match, routeName, history} = props;
   return(
     <CollectionPreviewContainer>
@@ -14,7 +13,6 @@ const CollectionPreview = (props) => {
         {items
           .filter((item,idx) => idx < 4)
           .map((item) => {
-            console.log(item)
             return <CollectionItem key={item.id} item={item} />
         })}
       </PreviewContainer>
