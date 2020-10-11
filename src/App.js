@@ -11,6 +11,7 @@ import {connect} from 'react-redux';
 import {setCurrentUser} from './redux/user/user.action';
 import {selectCurrentUser} from './redux/user/user.selector';
 import {createStructuredSelector} from 'reselect'
+// import {selectCollectionsForPreview} from './redux/shop/shop.selector'
 
 
 class App extends Component {
@@ -39,7 +40,9 @@ class App extends Component {
       } else { 
         setCurrentUser(userAuth)
       }
-   })
+      //Changes: To add data in the firestore.
+      // addCollectionAndDocuments('collections', collectionsArray.map(({title,items}) => ({title, items})));
+    });
   }
 
   componentWillUnmount() {
@@ -67,7 +70,8 @@ class App extends Component {
 
 //Used to get the data from the reducer.
 const mapStateToProps = createStructuredSelector({
-  currentUser: selectCurrentUser
+  currentUser: selectCurrentUser,
+  // collectionsArray: selectCollectionsForPreview
 })
 
 // used to dispatch an action to the reducer.

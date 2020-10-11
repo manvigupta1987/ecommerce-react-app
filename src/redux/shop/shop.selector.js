@@ -14,7 +14,7 @@ export const selectShopCollections = createSelector(
 
 export const selectCollectionsForPreview = createSelector(
   [selectShopCollections],
-  collections => Object.values(collections)
+  collections => collections? Object.values(collections): []
 )
 
 // This function is not memoized due to collectionUrlParam being passed as mapStateToProps running whenever state changes and calling a new
@@ -26,5 +26,5 @@ export const selectCollectionsForPreview = createSelector(
 export const selectCollection = memoize((collectionUrlParam) => 
 createSelector(
   [selectShopCollections],
-  collections => collections[collectionUrlParam]
+  collections => (collections? collections[collectionUrlParam] : null)
 ));

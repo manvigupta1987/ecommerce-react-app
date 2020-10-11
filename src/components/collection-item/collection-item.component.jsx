@@ -5,6 +5,7 @@ import {addItems} from '../../redux/cart/cart.action'
 import {connect} from 'react-redux';
 
 const CollectionItem= ({item, addItems}) => {
+  console.log("item is", item)
   return (
       <div className='collection-item'>
         <div style = {{ backgroundImage: `url(${item.imageUrl})`}} className='image'></div>
