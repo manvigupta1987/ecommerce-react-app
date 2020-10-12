@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useEffect } from 'react';
 import './App.css';
 import HomePage from './pages/homepage/homepage.component.jsx';
 import ShopPage from './pages/shop/shop.component'
@@ -14,14 +14,14 @@ import {createStructuredSelector} from 'reselect'
 // import {selectCollectionsForPreview} from './redux/shop/shop.selector'
 
 
-class App extends Component {
-  unsubscribeFromAuth = null;
-  
-  componentDidMount() {
-    const {setCurrentUser} = this.props;
+const App = ({setCurrentUser,currentUser }) => {
+  //  unsubscribeFromAuth = null;
+
+  useEffect(()=>{
     // Auth is an open subscription. So, we also need to close this subscription when application is unmounted. 
     // To achieve this, onAuthStateChanged gives us a function which if we call unsubscribe the subscription. 
-    this.unsubscribeFromAuth =  auth.onAuthStateChanged(async userAuth => {
+    console.log('=========I am subscribing=============')
+    const unsubscribeFromAuth = auth.onAuthStateChanged(async userAuth => {
       if(userAuth) {
 
         //check if there is document present with the user's details. if not, it creates the entry in the firebase database and returns userRef.
@@ -32,10 +32,10 @@ class App extends Component {
         // another call updates the document snapshot.
         userRef.onSnapshot(snapShot => {
           setCurrentUser({
-              id: snapShot.id,
-              // .data() method on the snapshot gives the actual properties. 
-              ...snapShot.data()
-            });
+            id: snapShot.id,
+            // .data() method on the snapshot gives the actual properties. 
+            ...snapShot.data()
+          });
         })
       } else { 
         setCurrentUser(userAuth)
@@ -43,29 +43,26 @@ class App extends Component {
       //Changes: To add data in the firestore.
       // addCollectionAndDocuments('collections', collectionsArray.map(({title,items}) => ({title, items})));
     });
-  }
+    
+    //clean up function in useEffect
+    return () => {
+      console.log('=========I am unsubscribing=============')
+      unsubscribeFromAuth();
+    }
+  }, [setCurrentUser])
 
-  componentWillUnmount() {
-    this.unsubscribeFromAuth();
-  }
-
-  render() {
-    return( 
-      <div className='App'>
-        <Header/>
-        <Switch>
-          <Route exact path='/' component ={HomePage}/>
-          <Route path='/shop' component={ShopPage}/>
-          <Route exact path='/checkout' component={Checkout}/>
-          <Route exact path='/signin' render={()=> 
-                                      this.props.currentUser ? 
-                                        (<Redirect to='/' />) : 
-                                        (<SignInAndSignUpPage/>)}/>
-
-        </Switch>
-      </div>
-    );
-  }
+  return( 
+    <div className='App'>
+      <Header/>
+      <Switch>
+        <Route exact path='/' component ={HomePage}/>
+        <Route path='/shop' component={ShopPage}/>
+        <Route exact path='/checkout' component={Checkout}/>
+        <Route exact path='/signin' render={()=> currentUser ? (<Redirect to='/' />) 
+                                                :  (<SignInAndSignUpPage/>)}/>
+      </Switch>
+    </div>
+  );
 }
 
 //Used to get the data from the reducer.
@@ -80,5 +77,61 @@ const mapDispatchToProps = dispatch => ({
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);
+
+// class App extends Component {
+//   unsubscribeFromAuth = null;
+  
+//   componentDidMount() {
+//     const {setCurrentUser} = this.props;
+//     // Auth is an open subscription. So, we also need to close this subscription when application is unmounted. 
+//     // To achieve this, onAuthStateChanged gives us a function which if we call unsubscribe the subscription. 
+//     this.unsubscribeFromAuth =  auth.onAuthStateChanged(async userAuth => {
+//       if(userAuth) {
+
+//         //check if there is document present with the user's details. if not, it creates the entry in the firebase database and returns userRef.
+//         // if the document is present, it returns the referenece of existing document. 
+//         const userRef  = await createUserProfileDocument(userAuth);
+//         // You can listen to a document with the onSnapshot() method. An initial call using the callback you provide creates 
+//         // a document snapshot immediately with the current contents of the single document. Then, each time the contents change, 
+//         // another call updates the document snapshot.
+//         userRef.onSnapshot(snapShot => {
+//           setCurrentUser({
+//               id: snapShot.id,
+//               // .data() method on the snapshot gives the actual properties. 
+//               ...snapShot.data()
+//             });
+//         })
+//       } else { 
+//         setCurrentUser(userAuth)
+//       }
+//       //Changes: To add data in the firestore.
+//       // addCollectionAndDocuments('collections', collectionsArray.map(({title,items}) => ({title, items})));
+//     });
+//   }
+
+//   componentWillUnmount() {
+//     this.unsubscribeFromAuth();
+//   }
+
+//   render() {
+//     return( 
+//       <div className='App'>
+//         <Header/>
+//         <Switch>
+//           <Route exact path='/' component ={HomePage}/>
+//           <Route path='/shop' component={ShopPage}/>
+//           <Route exact path='/checkout' component={Checkout}/>
+//           <Route exact path='/signin' render={()=> 
+//                                       this.props.currentUser ? 
+//                                         (<Redirect to='/' />) : 
+//                                         (<SignInAndSignUpPage/>)}/>
+
+//         </Switch>
+//       </div>
+//     );
+//   }
+// }
+
+
 
 

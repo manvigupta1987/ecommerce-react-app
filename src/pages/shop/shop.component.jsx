@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import './shop.styles.scss'
 import CollectionOverview from '../../components/collection-overview/collection-overview.compnents'
 import CollectionPage from '../collection/collection.component'; 
@@ -19,15 +19,16 @@ const CollectionOverviewWithSpinner = WithSpinner(CollectionOverview)
 const CollectionPageWithSpinner = WithSpinner(CollectionPage)
 
 // three objects match, location and history objects are passed by the Route that we used in the App.js for the Shop component routing.
-class ShopPage extends React.Component {
+const ShopPage = ({fetchCollectionStartAsync, match, isCollectionFetching, isCollectionLoaded}) => {
+  //Changes: Redux Thunk
   // state  = {
   //   loading: true
   // }
-  unsubscribeFromSnapShot = null;
+  // const unsubscribeFromSnapShot = null;
 
-  componentDidMount() {
-    const {fetchCollectionStartAsync} = this.props;
-    fetchCollectionStartAsync();
+  useEffect(() => {
+  fetchCollectionStartAsync();
+    //Changes: Redux Thunk
     // const {updateShopCollections} = this.props;
     // // collections is the name of collection in firebase firestore.
     // const collectionRef = firestore.collection('collections');
@@ -36,20 +37,15 @@ class ShopPage extends React.Component {
     //   updateShopCollections(collectionMap)
     //   this.setState({loading: false})
     // });
-  }
+  },[fetchCollectionStartAsync]);
 
-  render() {
-    const {match,isCollectionFetching, isCollectionLoaded} = this.props;
-    // const {loading} = this.state;
-
-    return (
-      <div className='shop-page'>
+  return (
+    <div className='shop-page'>
         {/*</div> parameters in the render function will be same as the component will receive.*/}
-        <Route exact path={`${match.path}`} render = {props => (<CollectionOverviewWithSpinner isLoading={isCollectionFetching} {...props}/>)}/>
-        <Route path ={`${match.path}/:collectionId`} render = {props => (<CollectionPageWithSpinner isLoading={!isCollectionLoaded} {...props}/>)}/>
-      </div>
-    );
-  }
+      <Route exact path={`${match.path}`} render = {props => (<CollectionOverviewWithSpinner isLoading={isCollectionFetching} {...props}/>)}/>
+      <Route path ={`${match.path}/:collectionId`} render = {props => (<CollectionPageWithSpinner isLoading={!isCollectionLoaded} {...props}/>)}/>
+    </div>
+  );
 }
 
 const mapDispatchToProps = dispatch => ({
