@@ -1,5 +1,4 @@
 import React, {useEffect} from 'react';
-import './shop.styles.scss'
 import CollectionOverview from '../../components/collection-overview/collection-overview.compnents'
 import CollectionPage from '../collection/collection.component'; 
 import WithSpinner from '../../components/with-spinner/with-spinner.component';

@@ -2,16 +2,21 @@ import React from 'react';
 import {withRouter} from 'react-router-dom'; // withRouter is the HOC component. 
 
 import './menu-item.styles.scss'
+import {MenuItemContainer,ContentContainer,
+        BackgroundImageContainer, 
+        TitleContainer,
+        ContentSubtitle } from './menu-item.styles.jsx'
 
 const MenuItem = ({section, history, match}) => {
   return (
-    <div className={`${section.size} menu-item`} onClick={()=>history.push(`${section.linkUrl}`)}>
-      <div style = {{ backgroundImage: `url(${section.imageUrl})`}} className='background-image'></div>
-      <div className='content'>
-        <h1 className='title'> {section.title.toUpperCase()}</h1>
-        <span className='subtitle'>SHOP NOW</span>
-      </div>
-    </div>
+    <MenuItemContainer size={section.size} onClick={()=>history.push(`${section.linkUrl}`)}>
+      { /* <div style = {{ backgroundImage: `url(${section.imageUrl})`}} className='background-image'></div> */}
+      <BackgroundImageContainer imageUrl={section.imageUrl}/>
+      <ContentContainer>
+        <TitleContainer> {section.title.toUpperCase()}</TitleContainer>
+        <ContentSubtitle>SHOP NOW</ContentSubtitle>
+      </ContentContainer>
+    </MenuItemContainer>
   );
 }
 
