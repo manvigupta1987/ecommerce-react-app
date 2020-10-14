@@ -12,6 +12,8 @@ import {connect} from 'react-redux';
 import {setCurrentUser} from './redux/user/user.action';
 import {selectCurrentUser} from './redux/user/user.selector';
 import {createStructuredSelector} from 'reselect'
+import ErrorBoundary from './components/error-boundary/error-boundary.component';
+
 // import {selectCollectionsForPreview} from './redux/shop/shop.selector'
 
 //Lazy Loading Optimization: HomePage is now lazy loading in. 
@@ -63,13 +65,15 @@ const App = ({setCurrentUser,currentUser }) => {
       <GlobalStyle/>
       <Header/>
       <Switch>
-      <Suspense fallback={<Spinner/>}>
-        <Route exact path='/' component ={HomePage}/>
-        <Route path='/shop' component={ShopPage}/>
-        <Route exact path='/checkout' component={Checkout}/>
-        <Route exact path='/signin' render={()=> currentUser ? (<Redirect to='/' />) 
+        <ErrorBoundary>
+          <Suspense fallback={<Spinner/>}>
+            <Route exact path='/' component ={HomePage}/>
+            <Route path='/shop' component={ShopPage}/>
+            <Route exact path='/checkout' component={Checkout}/>
+            <Route exact path='/signin' render={()=> currentUser ? (<Redirect to='/' />) 
                                                 :  (<SignInAndSignUpPage/>)}/>
-      </Suspense>
+          </Suspense>
+        </ErrorBoundary>
       </Switch>
     </div>
   );
