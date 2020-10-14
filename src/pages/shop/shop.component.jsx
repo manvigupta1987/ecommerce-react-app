@@ -1,7 +1,8 @@
-import React, {useEffect} from 'react';
-import CollectionOverview from '../../components/collection-overview/collection-overview.compnents'
-import CollectionPage from '../collection/collection.component'; 
+import React, {useEffect,lazy, Suspense} from 'react';
+// import CollectionOverview from '../../components/collection-overview/collection-overview.compnents'
+// import CollectionPage from '../collection/collection.component'; 
 import WithSpinner from '../../components/with-spinner/with-spinner.component';
+import Spinner from '../../components/spinner/spinner.component';
 
 
 import {Route} from 'react-router-dom';
@@ -13,6 +14,8 @@ import {fetchCollectionStartAsync} from '../../redux/shop/shop.action.js'
 import {createStructuredSelector} from 'reselect';
 import {selectIsCollectionFetching, selectIsCollectionLoaded} from '../../redux/shop/shop.selector.js'
 
+const CollectionOverview = lazy(()=> import('../../components/collection-overview/collection-overview.compnents'))
+const CollectionPage = lazy(()=>import('../collection/collection.component'))
 
 const CollectionOverviewWithSpinner = WithSpinner(CollectionOverview)
 const CollectionPageWithSpinner = WithSpinner(CollectionPage)
@@ -40,9 +43,11 @@ const ShopPage = ({fetchCollectionStartAsync, match, isCollectionFetching, isCol
 
   return (
     <div className='shop-page'>
+      <Suspense fallback={<Spinner/>}> 
         {/*</div> parameters in the render function will be same as the component will receive.*/}
       <Route exact path={`${match.path}`} render = {props => (<CollectionOverviewWithSpinner isLoading={isCollectionFetching} {...props}/>)}/>
       <Route path ={`${match.path}/:collectionId`} render = {props => (<CollectionPageWithSpinner isLoading={!isCollectionLoaded} {...props}/>)}/>
+      </Suspense>
     </div>
   );
 }
