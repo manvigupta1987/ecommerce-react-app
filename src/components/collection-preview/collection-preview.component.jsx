@@ -4,7 +4,7 @@ import CollectionItem from '../collection-item/collection-item.component'
 import {CollectionPreviewContainer, TitleContainer, PreviewContainer} from './collection-preview.styles'
 import { withRouter } from 'react-router-dom';
 
-const CollectionPreview = (props) => {
+export const CollectionPreview = (props) => {
   const {title, items, match, routeName, history} = props;
   return(
     <CollectionPreviewContainer>

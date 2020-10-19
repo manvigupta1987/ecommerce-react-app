@@ -12,7 +12,7 @@ import {HeaderContainer, LogoContainer, OptionsContainer, OptionLink} from './he
 //Connect is a HOC 
 import {connect} from 'react-redux';
 
-const Header = ({currentUser, hiddenCart}) => {
+export const Header = ({currentUser, hiddenCart}) => {
   return(
     <HeaderContainer>
       <LogoContainer to='/'>

@@ -34,6 +34,8 @@ export const MenuItemContainer = styled.div`
   }
 `;
 
+MenuItemContainer.displayName = 'MenuItemContainer'
+
 export const BackgroundImageContainer = styled.div`
   width: 100%;
   height: 100%;
@@ -41,6 +43,8 @@ export const BackgroundImageContainer = styled.div`
   background-size: cover;
   background-image: ${({ imageUrl }) => `url(${imageUrl})`};
 `;
+
+BackgroundImageContainer.displayName = 'BackgroundImageContainer'
 
 export const ContentContainer = styled.div` 
     opacity: 0.9;
@@ -62,6 +66,7 @@ export const TitleContainer = styled.h1`
   font-size: 22px;
   color: #4a4a4a;
 `;
+TitleContainer.displayName = 'TitleContainer'
 
 export const ContentSubtitle = styled.span`
   font-weight: lighter;

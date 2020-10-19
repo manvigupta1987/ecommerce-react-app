@@ -4,7 +4,7 @@ import {CollectionItemContainer, ImageContainer, CollectionFooter, NameContainer
 import {addItems} from '../../redux/cart/cart.action'
 import {connect} from 'react-redux';
 
-const CollectionItem= ({item, addItems}) => {
+export const CollectionItem = ({item, addItems}) => {
   return (
       <CollectionItemContainer>
         <ImageContainer imageUrl ={item.imageUrl} className='image'></ImageContainer>

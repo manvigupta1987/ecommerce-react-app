@@ -1,0 +1,32 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Header Component header component snapshot testing 1`] = `
+<styled.div>
+  <Styled(Link)
+    to="/"
+  >
+    <ForwardRef(SvgLogo)
+      className="logo"
+    />
+  </Styled(Link)>
+  <styled.div>
+    <OptionLink
+      to="/shop"
+    >
+      SHOP
+    </OptionLink>
+    <OptionLink
+      to="/contact"
+    >
+      CONTACT
+    </OptionLink>
+    <OptionLink
+      as="div"
+      onClick={[Function]}
+    >
+      SIGN OUT
+    </OptionLink>
+    <Connect(CartIcon) />
+  </styled.div>
+</styled.div>
+`;
