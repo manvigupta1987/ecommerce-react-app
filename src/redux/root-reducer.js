@@ -1,7 +1,6 @@
 // Its an actual base reducer object that represents the state of the application. It contains all the reducers. 
-
-//UserReducer contains the state of the currentUser. 
-// To combine all the reducers in the root reducers, we use combine reducer from the redux. 
+// UserReducer contains the state of the currentUser. 
+// CombineReducers is used to combine all the reducers.
 
 import { combineReducers } from  'redux';
 import userReducer from './user/user.reducer';
@@ -9,9 +8,9 @@ import cartReducer from './cart/cart.reducer';
 import directoryReducer from './directory/directory.reducer';
 import shopReducer from './shop/shop.reducer';
 
-//Redux-persist library changes.
+// PersistReducer is used to persist the reducer. 
 import {persistReducer} from 'redux-persist';
-// local storage object from redux-persist
+// this imports the local storage object from redux-persist.
 import storage from 'redux-persist/lib/storage';
 
 const persistConfig = {
@@ -27,7 +26,7 @@ const rootReducer = combineReducers ({
   directory : directoryReducer,
   shop: shopReducer
 })
-
+// this returns a modified version of rootReducer with persisted capabilities. 
 export default persistReducer(persistConfig, rootReducer)
 
 

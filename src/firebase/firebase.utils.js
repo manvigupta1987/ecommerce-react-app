@@ -15,13 +15,18 @@ const config = {
 
 export const createUserProfileDocument = async(userAuth, additionalData) => {
   if(!userAuth) return;
+
+  // it returns a document reference. When we call .get() on the document reference, it returns the snapshot object. 
   const userRef = firestore.doc(`users/${userAuth.uid}`);
   const snapshot = await userRef.get();
 
+  //.exists property indicates if there is any data present for the userID in the firestore or not. If it doesnt exist, we want to save the 
+  // user profile in the firestore database. 
   if(!snapshot.exists) {
     const {displayName, email} = userAuth;
     const createAt = new Date()
     try {
+      // create the object in the firestore database.
       await userRef.set({
         displayName,
         email,
@@ -29,7 +34,7 @@ export const createUserProfileDocument = async(userAuth, additionalData) => {
         ...additionalData
       })
     } catch(error) {
-      console.log(error)
+      console.log('error creating user', error.message);
     };
   }
   return userRef;
@@ -38,12 +43,14 @@ export const createUserProfileDocument = async(userAuth, additionalData) => {
 export const addCollectionAndDocuments = async(collectionKey, objectsToAdd) => {
   const collectionRef = firestore.collection(collectionKey);
 
+  // we are using batch here because .set() calls run one at a time.
   const batch = firestore.batch();
   objectsToAdd.forEach(obj => {
+    //.doc() with empty key, returns a doc reference with random unique key. 
     const newDocRef = collectionRef.doc()
     batch.set(newDocRef, obj)
   });
-
+  // it fires the batch operation and returns a promise. When commit succeeds, it returns null value. 
   return await batch.commit()
 }
 

@@ -1,9 +1,5 @@
 import React, { useEffect, lazy, Suspense } from 'react';
 import {GlobalStyle} from './global.styles';
-// import HomePage from './pages/homepage/homepage.component';
-// import ShopPage from './pages/shop/shop.component'
-// import SignInAndSignUpPage from './pages/sign-in-and-sign-up-page/sign-in-and-sign-up.component'
-// import Checkout from './pages/checkout/checkout.component';
 import Spinner from './components/spinner/spinner.component.jsx';
 import Header from './components/header/header.components';
 import {auth, createUserProfileDocument} from './firebase/firebase.utils';
@@ -14,10 +10,8 @@ import {selectCurrentUser} from './redux/user/user.selector';
 import {createStructuredSelector} from 'reselect'
 import ErrorBoundary from './components/error-boundary/error-boundary.component';
 
-// import {selectCollectionsForPreview} from './redux/shop/shop.selector'
-
 //Lazy Loading Optimization: HomePage is now lazy loading in. 
-const HomePage = lazy(()=> import('./pages//homepage/homepage.component'));
+const HomePage = lazy(()=> import('./pages/homepage/homepage.component'));
 const ShopPage = lazy(() => import('./pages/shop/shop.component'));
 const SignInAndSignUpPage = lazy(() => import('./pages/sign-in-and-sign-up-page/sign-in-and-sign-up.component'));
 const Checkout = lazy(() => import('./pages/checkout/checkout.component'));
@@ -27,13 +21,17 @@ const App = ({setCurrentUser,currentUser }) => {
   //  unsubscribeFromAuth = null;
 
   useEffect(()=>{
+    // The recommended way to get the current user is by setting on observer (onAuthStateChanged) on the auth object. It ensures that auth object 
+    // is not in intermediate state. 
     // Auth is an open subscription. So, we also need to close this subscription when application is unmounted. 
     // To achieve this, onAuthStateChanged gives us a function which if we call unsubscribe the subscription. 
     console.log('=========I am subscribing=============')
     const unsubscribeFromAuth = auth.onAuthStateChanged(async userAuth => {
+      // userAuth will be set to null when user signed out. 
       if(userAuth) {
 
-        //check if there is document present with the user's details. if not, it creates the entry in the firebase database and returns userRef.
+        //createUserProfileDocument checks if there is document present with the user's details in the database. 
+        // if not, it creates the entry in the firebase database and returns userRef.
         // if the document is present, it returns the referenece of existing document. 
         const userRef  = await createUserProfileDocument(userAuth);
         // You can listen to a document with the onSnapshot() method. An initial call using the callback you provide creates 
@@ -45,15 +43,15 @@ const App = ({setCurrentUser,currentUser }) => {
             // .data() method on the snapshot gives the actual properties. 
             ...snapShot.data()
           });
-        })
+        });
       } else { 
         setCurrentUser(userAuth)
       }
-      //Changes: To add data in the firestore.
+      //Changes: To add data in the firestore. Commented as this function needed to run only once. 
       // addCollectionAndDocuments('collections', collectionsArray.map(({title,items}) => ({title, items})));
     });
     
-    //clean up function in useEffect
+    //clean up function in useEffect, works as componentWillUnmount()
     return () => {
       console.log('=========I am unsubscribing=============')
       unsubscribeFromAuth();
@@ -63,10 +61,10 @@ const App = ({setCurrentUser,currentUser }) => {
   return( 
     <div className='App'>
       <GlobalStyle/>
-      <Header/>
-      <Switch>
+      <Header/>  {/* Adding header before the switch so that it can be present on all the pages. */}
+      <Switch> 
         <ErrorBoundary>
-          <Suspense fallback={<Spinner/>}>
+          <Suspense fallback={<Spinner/>}> {/* Required with Lazy loading. Fallback shows the spinner component untill the other component is visible. */}
             <Route exact path='/' component ={HomePage}/>
             <Route path='/shop' component={ShopPage}/>
             <Route exact path='/checkout' component={Checkout}/>
@@ -81,7 +79,7 @@ const App = ({setCurrentUser,currentUser }) => {
 
 //Used to get the data from the reducer.
 const mapStateToProps = createStructuredSelector({
-  currentUser: selectCurrentUser,
+  currentUser: selectCurrentUser
   // collectionsArray: selectCollectionsForPreview
 })
 
@@ -91,61 +89,3 @@ const mapDispatchToProps = dispatch => ({
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);
-
-// class App extends Component {
-//   unsubscribeFromAuth = null;
-  
-//   componentDidMount() {
-//     const {setCurrentUser} = this.props;
-//     // Auth is an open subscription. So, we also need to close this subscription when application is unmounted. 
-//     // To achieve this, onAuthStateChanged gives us a function which if we call unsubscribe the subscription. 
-//     this.unsubscribeFromAuth =  auth.onAuthStateChanged(async userAuth => {
-//       if(userAuth) {
-
-//         //check if there is document present with the user's details. if not, it creates the entry in the firebase database and returns userRef.
-//         // if the document is present, it returns the referenece of existing document. 
-//         const userRef  = await createUserProfileDocument(userAuth);
-//         // You can listen to a document with the onSnapshot() method. An initial call using the callback you provide creates 
-//         // a document snapshot immediately with the current contents of the single document. Then, each time the contents change, 
-//         // another call updates the document snapshot.
-//         userRef.onSnapshot(snapShot => {
-//           setCurrentUser({
-//               id: snapShot.id,
-//               // .data() method on the snapshot gives the actual properties. 
-//               ...snapShot.data()
-//             });
-//         })
-//       } else { 
-//         setCurrentUser(userAuth)
-//       }
-//       //Changes: To add data in the firestore.
-//       // addCollectionAndDocuments('collections', collectionsArray.map(({title,items}) => ({title, items})));
-//     });
-//   }
-
-//   componentWillUnmount() {
-//     this.unsubscribeFromAuth();
-//   }
-
-//   render() {
-//     return( 
-//       <div className='App'>
-//         <Header/>
-//         <Switch>
-//           <Route exact path='/' component ={HomePage}/>
-//           <Route path='/shop' component={ShopPage}/>
-//           <Route exact path='/checkout' component={Checkout}/>
-//           <Route exact path='/signin' render={()=> 
-//                                       this.props.currentUser ? 
-//                                         (<Redirect to='/' />) : 
-//                                         (<SignInAndSignUpPage/>)}/>
-
-//         </Switch>
-//       </div>
-//     );
-//   }
-// }
-
-
-
-

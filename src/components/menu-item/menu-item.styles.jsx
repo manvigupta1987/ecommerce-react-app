@@ -47,7 +47,6 @@ export const BackgroundImageContainer = styled.div`
 BackgroundImageContainer.displayName = 'BackgroundImageContainer'
 
 export const ContentContainer = styled.div` 
-    opacity: 0.9;
     height: 90px;
     padding: 0 25px;
     display: flex;
